@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, X, LogOut } from "lucide-react"
 import { Button } from "./ui/button"
+import { useAuth } from "../contexts/AuthContext.jsx"
 
 export function Navbar() {
   const location = useLocation()
@@ -15,6 +16,8 @@ export function Navbar() {
     { href: "/history", label: "History" },
     { href: "/profile", label: "Profile" },
   ]
+
+  const { handleLogout } = useAuth();
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-[#4CAF50]/10 sticky top-0 z-50 shadow-sm">
@@ -40,7 +43,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link to="/">
-              <Button variant="ghost" size="sm" className="ml-2 text-[#333333] hover:bg-[#E8F9EE] rounded-xl">
+              <Button onClick={handleLogout} variant="ghost" size="sm" className="ml-2 text-[#333333] hover:bg-[#E8F9EE] rounded-xl">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>

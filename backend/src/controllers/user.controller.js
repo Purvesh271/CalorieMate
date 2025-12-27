@@ -4,6 +4,7 @@ import bcrypt, { hash } from 'bcrypt';
 import crypto from 'crypto';
 
 
+// User Login
 const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -40,6 +41,7 @@ const login = async (req, res) => {
 };
 
 
+// Register User
 const register = async (req, res) => {
   const { name, email, password, currentWeight, targetWeight } = req.body;
 
@@ -78,5 +80,30 @@ const register = async (req, res) => {
   }
 };
 
+// Get User Profile
+const getUserProfile = async (req, res) => {
+  try {
+    const user = req.user;
 
-export { login, register };
+    return res.status(httpStatus.OK).json({
+      status: httpStatus.OK,
+      message: "Profile fetched successfully",
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        currentWeight: user.currentWeight,
+        targetWeight: user.targetWeight,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: httpStatus.INTERNAL_SERVER_ERROR,
+      message: "Failed to fetch profile",
+      error: error.message,
+    });
+  }
+};
+
+export { login, register, getUserProfile };

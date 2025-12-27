@@ -76,17 +76,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   // LOGOUT
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     setUserData(null);
     setIsAuthenticated(false);
-    navigate("/login");
+    navigate("/");
   };
 
   // DASHBOARD / PROFILE
   const getUserProfile = async () => {
     try {
-      const res = await client.get("/get_profile");
+      const res = await client.get("/getUserProfile");
       setUserData(res.data);
       return res.data;
     } catch (err) {
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     handleRegister,
     handleLogin,
-    logout,
+    handleLogout,
     getUserProfile,
     getNutritionHistory,
   };

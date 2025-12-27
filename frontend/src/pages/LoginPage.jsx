@@ -67,22 +67,6 @@ function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  className="w-4 h-4 rounded border-gray-300 text-[#4CAF50] focus:ring-[#4CAF50]"
-                />
-                <label htmlFor="remember" className="text-sm text-gray-600">
-                  Remember me
-                </label>
-              </div>
-              <a href="#" className="text-sm text-[#4CAF50] hover:underline">
-                Forgot password?
-              </a>
-            </div>
-
             <Button type="submit" className="w-full h-12 text-base mt-6">
               Sign In
             </Button>
