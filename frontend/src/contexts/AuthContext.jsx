@@ -97,9 +97,20 @@ export const AuthProvider = ({ children }) => {
   // NUTRITION HISTORY
   const getNutritionHistory = async () => {
     try {
-      const res = await client.get("/get_all_activity");
+      const res = await axios.get(
+        `${server}/api/v1/nutrition/today`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       return res.data;
     } catch (err) {
+      console.error(
+        "GET NUTRITION ERROR:",
+        err.response?.data || err.message
+      );
       throw err;
     }
   };

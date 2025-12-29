@@ -83,7 +83,7 @@ function DashboardPage() {
   const remainingCalories = calories - consumedCalories;
 
   /* =======================
-     ONE-STEP ADD FOOD
+     ADD FOOD
      ======================= */
   const handleAddFood = async () => {
     if (!searchTerm.trim()) return;
@@ -103,24 +103,39 @@ function DashboardPage() {
         }
       );
 
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "AI analysis failed");
+      }
+
       const nutrition = await res.json();
 
       // 2️ Save directly to today log
-      await fetch("http://localhost:8080/api/v1/nutrition/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          foodName: nutrition.name,
-          calories: nutrition.calories,
-          protein: nutrition.protein,
-        }),
-      });
+      const saveRes = await fetch(
+        "http://localhost:8080/api/v1/nutrition/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            foodName: nutrition.name,
+            calories: nutrition.calories,
+            protein: nutrition.protein,
+          }),
+        }
+      );
 
-      // 3️ Update UI instantly
-      setFoods([...foods, nutrition]);
+      if (!saveRes.ok) {
+        const err = await saveRes.json();
+        throw new Error(err.message || "Failed to save food");
+      }
+
+      // 3️ REFRESH FROM BACKEND
+      const data = await getNutritionHistory();
+      setFoods(data.todayLog?.foods || []);
+
       setSearchTerm("");
     } catch (err) {
       alert("Failed to add food");
@@ -129,10 +144,29 @@ function DashboardPage() {
     }
   };
 
-  const handleDelete = (id) => {
-    setFoods((prevFoods) => prevFoods.filter((food) => food._id !== id));
-  };
+  
+  /* =======================
+      DELETE FOOD LOG
+      ======================= */
+  const handleDelete = async (foodId) => {
+    try {
+      await fetch(
+        `http://localhost:8080/api/v1/nutrition/food/${foodId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
+      // refetch today's log
+      const data = await getNutritionHistory();
+      setFoods(data.todayLog?.foods || []);
+    } catch (error) {
+      alert("Failed to delete food");
+    }
+  };
 
   /* =======================
      RENDER

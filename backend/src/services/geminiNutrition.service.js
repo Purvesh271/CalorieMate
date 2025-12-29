@@ -7,7 +7,8 @@ const ai = new GoogleGenAI({
 });
 
 export const getNutritionFromGemini = async (foodText) => {
-  const prompt = `
+try {
+    const prompt = `
 You are a nutrition expert.
 Return ONLY valid JSON in this format:
 
@@ -19,16 +20,30 @@ Return ONLY valid JSON in this format:
 Food: "${foodText}"
 `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-  });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
 
-  const text = response.text;
+    const text = response.text;
 
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
-  const json = text.slice(start, end + 1);
+    // Extract JSON safely
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
 
-  return JSON.parse(json);
+    if (start === -1 || end === -1) {
+      throw new Error("Invalid Gemini response format");
+    }
+
+    const json = text.slice(start, end + 1);
+    const parsed = JSON.parse(json);
+
+    return {
+      calories: Number(parsed.calories),
+      protein: Number(parsed.protein) || 0,
+    };
+  } catch (error) {
+    console.error("Gemini Service Error:", error.message);
+    throw error;
+  }
 };
