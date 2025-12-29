@@ -80,7 +80,7 @@ function DashboardPage() {
      ======================= */
   const consumedCalories = foods.reduce((s, f) => s + f.calories, 0);
   const consumedProtein = foods.reduce((s, f) => s + (f.protein || 0), 0);
-  const remainingCalories = calories - consumedCalories;
+  const remainingCalories = Math.max( 0, Math.round(calories - consumedCalories) );
 
   /* =======================
      ADD FOOD

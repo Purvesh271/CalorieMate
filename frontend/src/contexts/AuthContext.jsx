@@ -94,6 +94,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // UPDATE PROFILE
+  const updateUserProfile = async (updatedData) => {
+    try {
+      const res = await client.put("/updateProfile", updatedData);
+
+      if (res.status === httpStatus.OK) {
+        setUserData(res.data);
+        return res.data;
+      }
+    } catch (err) {
+      console.error("UPDATE PROFILE ERROR:", err.response?.data || err.message);
+      throw err;
+    }
+  };
+
   // NUTRITION HISTORY
   const getNutritionHistory = async () => {
     try {
@@ -122,6 +137,7 @@ export const AuthProvider = ({ children }) => {
     handleLogin,
     handleLogout,
     getUserProfile,
+    updateUserProfile,
     getNutritionHistory,
   };
 

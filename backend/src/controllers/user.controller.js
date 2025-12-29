@@ -106,4 +106,37 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-export { login, register, getUserProfile };
+// Update User Profile
+const updateUserProfile = async (req, res) => {
+  try {
+    const user = req.user; 
+    const { name, currentWeight, targetWeight } = req.body;
+
+    // Update allowed fields only
+    if (name) user.name = name;
+    if (currentWeight) user.currentWeight = currentWeight;
+    if (targetWeight) user.targetWeight = targetWeight;
+
+    await user.save();
+
+    return res.status(httpStatus.OK).json({
+      status: httpStatus.OK,
+      message: "Profile updated successfully",
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        currentWeight: user.currentWeight,
+        targetWeight: user.targetWeight,
+      },
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: httpStatus.INTERNAL_SERVER_ERROR,
+      message: "Failed to update profile",
+      error: error.message,
+    });
+  }
+};
+
+export { login, register, getUserProfile, updateUserProfile };
