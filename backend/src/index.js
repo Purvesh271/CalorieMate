@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 import userRoutes from "./routes/users.routes.js";
+import nutritionRoutes from "./routes/nutrition.routes.js";
+import nutritionLookupRoutes from "./routes/nutritionLookup.routes.js";
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use(express.json({ limit: "40kb" }));
 app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/nutrition", nutritionRoutes);
+app.use("/api/v1/nutrition-lookup", nutritionLookupRoutes);
 
 
 const startServer = async () => {
@@ -23,9 +27,11 @@ const startServer = async () => {
 
     app.listen(8080, () => {
       console.log("Server running on http://localhost:8080");
+
     });
   } catch (error) {
     console.error("DB connection failed:", error.message);
+  
   }
 };
 
