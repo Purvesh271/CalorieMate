@@ -1,8 +1,7 @@
-let IS_PROD = false;  //if want to work on local host make this false 
+let IS_PROD = true;  //if want to work on local host make this false 
 const server = IS_PROD ?
-    "live_server_url" :
-
-    "http://localhost:8080"
+  import.meta.env.VITE_BACKEND_URL
+  : "http://localhost:8080";
 
 
 export default server;

@@ -5,6 +5,8 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 import { useEffect, useState } from "react";
 import withAuth from "../utils/withAuth.jsx";
 import { calculateNutritionGoals } from "../utils/nutritionCalculator.js";
+import { showSuccess } from "../utils/toast";
+
 
 function ProfilePage() {
   const {
@@ -90,6 +92,7 @@ function ProfilePage() {
       targetWeight: Number(formData.targetWeight),
     });
 
+    showSuccess("Profile updated successfully");
     setIsEditing(false);
   };
 

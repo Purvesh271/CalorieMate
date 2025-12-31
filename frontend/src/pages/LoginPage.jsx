@@ -8,6 +8,8 @@ import { Input } from "../components/Input"
 import { Label } from "../components/Label"
 import { useAuth } from "../contexts/AuthContext.jsx"
 import withAuth from "../utils/withAuth.jsx"
+import { showError } from "../utils/toast";
+
 
 function LoginPage() {
   // const navigate = useNavigate()
@@ -22,12 +24,9 @@ function LoginPage() {
   // }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await handleLogin(email, password);
-    } catch (err) {
-      alert("Invalid email or password");
-    }
+    await handleLogin(email, password);
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E8F9EE] to-white flex items-center justify-center px-4 sm:px-6 lg:px-8">

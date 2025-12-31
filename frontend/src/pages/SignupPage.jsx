@@ -5,7 +5,9 @@ import { Link } from "react-router-dom"
 import { Button } from "../components/Button"
 import { Input } from "../components/Input"
 import { Label } from "../components/Label"
-import { useAuth } from "../contexts/AuthContext.jsx"  
+import { useAuth } from "../contexts/AuthContext.jsx"
+import { showSuccess, showError } from "../utils/toast";
+
 
 function SignupPage() {
   // const navigate = useNavigate()
@@ -21,7 +23,7 @@ function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("SIGNUP SUBMIT CLICKED"); // 👈 ADD THIS
+    console.log("SIGNUP SUBMIT CLICKED"); 
     try {
       await handleRegister(
         formData.name,
@@ -30,10 +32,9 @@ function SignupPage() {
         Number(formData.currentWeight),
         Number(formData.targetWeight)
       );
-      alert("Account created successfully. Please login.");
+      showSuccess("Account created successfully. Please login.");
     } catch (err) {
-    console.log("SIGNUP ERROR:", err.message);
-    alert(err.message);
+      showError(err.message || "Signup failed");
     }
 
   };

@@ -11,6 +11,8 @@ import { Target, TrendingUp, Apple, Plus } from "lucide-react";
 import withAuth from "../utils/withAuth.jsx";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { calculateNutritionGoals } from "../utils/nutritionCalculator.js";
+import { showSuccess, showError } from "../utils/toast";
+
 
 function DashboardPage() {
   const {
@@ -137,8 +139,10 @@ function DashboardPage() {
       setFoods(data.todayLog?.foods || []);
 
       setSearchTerm("");
+
+      showSuccess("Food added successfully");
     } catch (err) {
-      alert("Failed to add food");
+      showError(err.message || "Failed to add food");
     } finally {
       setLoading(false);
     }
@@ -164,7 +168,7 @@ function DashboardPage() {
       const data = await getNutritionHistory();
       setFoods(data.todayLog?.foods || []);
     } catch (error) {
-      alert("Failed to delete food");
+      showError("Failed to delete food");
     }
   };
 

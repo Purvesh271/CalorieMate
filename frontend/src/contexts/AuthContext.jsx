@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../environment";
+import { showError, showInfo, showSuccess } from "../utils/toast";
 
 export const AuthContext = createContext({});
 
@@ -68,9 +69,12 @@ export const AuthProvider = ({ children }) => {
       if (res.status === httpStatus.OK) {
         localStorage.setItem("token", res.data.token);
         setIsAuthenticated(true);
+
+        showSuccess("Logged in successfully");
         navigate("/dashboard");
       }
     } catch (err) {
+      showError(err.response?.data?.message || "Invalid email or password");
       throw err;
     }
   };
@@ -81,6 +85,7 @@ export const AuthProvider = ({ children }) => {
     setUserData(null);
     setIsAuthenticated(false);
     navigate("/");
+    showInfo("Logged out successfully");
   };
 
   // DASHBOARD / PROFILE
@@ -120,12 +125,31 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-      return res.data;
+      return res.data; // daily log object for today
     } catch (err) {
       console.error(
         "GET NUTRITION ERROR:",
         err.response?.data || err.message
       );
+      throw err;
+    }
+  };
+
+  // WEEKLY NUTRITION HISTORY
+  const getWeeklyNutritionHistory = async () => {
+    try {
+      const res = await axios.get(
+        `${server}/api/v1/nutrition/history/weekly`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      return res.data.data; // array of daily logs for the week
+    } catch (err) {
+      console.error("GET WEEKLY HISTORY ERROR:", err.response?.data || err.message);
       throw err;
     }
   };
@@ -139,6 +163,7 @@ export const AuthProvider = ({ children }) => {
     getUserProfile,
     updateUserProfile,
     getNutritionHistory,
+    getWeeklyNutritionHistory,
   };
 
   return (

@@ -112,3 +112,40 @@ export const deleteFood = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+/* ======================================================
+   GET WEEKLY HISTORY (LAST 7 DAYS)
+====================================================== */
+export const getWeeklyHistory = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 6);
+    startDate.setHours(0, 0, 0, 0);
+
+    const logs = await NutritionLog.find({
+      user: userId,
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    })
+      .sort({ date: 1 })
+      .select("date totalCalories totalProtein foods");
+
+    return res.status(httpStatus.OK).json({
+      status: httpStatus.OK,
+      data: logs,
+    });
+  } catch (error) {
+    console.error("Weekly History Error:", error.message);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      status: httpStatus.INTERNAL_SERVER_ERROR,
+      message: "Failed to fetch weekly history",
+    });
+  }
+};

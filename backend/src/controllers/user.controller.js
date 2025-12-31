@@ -18,7 +18,13 @@ const login = async (req, res) => {
             });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
-
+        
+        if (!isPasswordValid) {
+          return res.status(httpStatus.UNAUTHORIZED).json({
+            status: httpStatus.UNAUTHORIZED,
+            message: "Invalid email or password",
+          });
+        }
         if (isPasswordValid) { 
             let token = crypto.randomBytes(20).toString('hex');
             user.token = token;

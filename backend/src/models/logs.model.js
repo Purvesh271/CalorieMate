@@ -43,5 +43,11 @@ const nutritionLogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Ensure a user can have only one log per date
+nutritionLogSchema.index(
+  { user: 1, date: 1 },
+  { unique: true }
+);
+
 const NutritionLog = mongoose.model("NutritionLog", nutritionLogSchema);
 export { NutritionLog };
