@@ -58,7 +58,7 @@ JWT_SECRET=your_jwt_secret
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-3️⃣ Setup Frontend
+### 3️⃣ Setup Frontend
 ```bash
 cd caloriemate-react-app
 npm install

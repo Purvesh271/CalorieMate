@@ -12,6 +12,7 @@ import withAuth from "../utils/withAuth.jsx";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { calculateNutritionGoals } from "../utils/nutritionCalculator.js";
 import { showSuccess, showError } from "../utils/toast";
+import server from "../environment";
 
 
 function DashboardPage() {
@@ -95,7 +96,7 @@ function DashboardPage() {
     try {
       // 1️ Analyze food with Gemini
       const res = await fetch(
-        `http://localhost:8080/api/v1/nutrition-lookup/ai?query=${encodeURIComponent(
+        `${server}/api/v1/nutrition-lookup/ai?query=${encodeURIComponent(
           searchTerm
         )}`,
         {
@@ -114,7 +115,7 @@ function DashboardPage() {
 
       // 2️ Save directly to today log
       const saveRes = await fetch(
-        "http://localhost:8080/api/v1/nutrition/add",
+        `${server}/api/v1/nutrition/add`,
         {
           method: "POST",
           headers: {
@@ -155,7 +156,7 @@ function DashboardPage() {
   const handleDelete = async (foodId) => {
     try {
       await fetch(
-        `http://localhost:8080/api/v1/nutrition/food/${foodId}`,
+        `${server}/api/v1/nutrition/food/${foodId}`,
         {
           method: "DELETE",
           headers: {
